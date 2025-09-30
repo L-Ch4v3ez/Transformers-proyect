@@ -2,13 +2,25 @@
 #define TAM 50
 using namespace std;
 
+struct Fecha {
+    int año;
+    int mes;
+    int dia;
+};
+
+struct Relacion {
+    string designacion_1; // nombre del bot con quien se relaciona
+    char amistad; // de A como buena amistad hasta F de pesima relacion
+ };
+
 struct Transformers {
     string designacion; // nombre con cual se identifica el transformers
     string tipo; // es bot comun o es prime
-    string relacion [TAM]; // con que bots se comunica
-    int anios; // cuanto tiempo lleva existiendo
+    int numero_de_relaciones; 
+    Relacion relaciones [TAM]; // con que bots se comunica
+    Fecha fecha_de_creacion; // cuanto tiempo lleva existiendo, calcular talvez
+    int nivel_de_fuerza; // de 1 a 100 como max
     
-
 };
 
 int main()
