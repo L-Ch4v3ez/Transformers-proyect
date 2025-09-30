@@ -1,1 +1,18 @@
+#include <iostream>
+#define TAM 50
+using namespace std;
 
+struct Transformers {
+    string designacion; // nombre con cual se identifica el transformers
+    string tipo; // es bot comun o es prime
+    string relacion [TAM]; // con que bots se comunica
+    int anios; // cuanto tiempo lleva existiendo
+    
+
+};
+
+int main()
+{
+    cout << "Hello world!" << endl;
+    return 0;
+}
