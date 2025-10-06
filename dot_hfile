@@ -1,5 +1,8 @@
 #ifndef USEFUL_FUNCTION_CHEST_H_INCLUDED
 #define USEFUL_FUNCTION_CHEST_H_INCLUDED
+#include <string>
+
+using namespace std;
 
 void ordenar(int arr[], int n){
     for (int i = 1; i < n; ++i) {
@@ -29,3 +32,4 @@ int searching(int arr[], string x){
 }
 
 #endif // USEFUL_FUNCTION_CHEST_H_INCLUDED
+
