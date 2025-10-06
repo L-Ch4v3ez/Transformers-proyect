@@ -30,6 +30,38 @@ struct Transformers {
     TechSpech stats;
     Fecha creacion;
 };
+
+void ordenar_nombre(Transformers bot[], int n){
+    for (int i = 1; i < n; ++i) {
+        string key = bot[i].designacion;
+        int j = i - 1;
+        while (j >= 0 && bot[j].designacion > key) {
+            bot[j + 1] = bot[j];
+            j = j - 1;
+        }
+        bot[j + 1].designacion = key;
+    }
+}
+
+int searching_string(Transformers bot[], string x, int n){
+    cout << "searching"<<endl;
+    int low = 0;
+    int high = n - 1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if(bot[mid].designacion == x){
+            return mid;
+        }
+        else if(bot[mid].designacion < x){
+            low = mid + 1;
+        }
+        else{
+            high = mid - 1;
+        }
+    }
+    return -1;
+}
+
 void leer_relaciones (Relacion relacion[], int n){
     cout << "Con quienes tiene relacion?: (amistosa, neutral, enemistad) " << endl;
     for (int i=0; i<n; i++){
@@ -119,16 +151,28 @@ int main()
 
     while(option != 4){
         switch (option){
-        case 1:{
+        case 1:{ // registrar
             int bot_num=6;
             leer_bots(transformers, bot_num);
+            // see if any bots have new relations, use numero de relaciones
+            for(int i=0;i<transformers[bot_num].numero_de_relaciones;i++){
+                int pos =searching_string(transformers,transformers[bot_num].relaciones[i].designacion_1,bot_num);
+                // pos is the bot that we have to register to
+                // we are looking for the names of the bots named in the relations of the newly registered bot
+                // now we have to register the new relations to those bots
+            }
             bot_num ++;
             menu();
             break;}
-        case 2:{
+        case 2:{ // info
+            ordenar_nombre(transformers,bot_num);// IT WORKSS >:D
             string to_find;
+            cin.ignore();
             cout <<"Designacion del bot:"<<endl;
             getline(cin,to_find);
+            int pos =searching_string(transformers,to_find,bot_num);
+            cout << "Ingresaste: "<< to_find << " whose position is: "<< pos<<endl;
+            mostrar_transformer(transformers,pos);
             cin.ignore();
             menu();
             break;}
