@@ -6,58 +6,6 @@
 
 using namespace std;
 
-
-void menu(Transformers transformers[], int &bot_num) {
-    int option = 0;
-    do {
-        cout << "\n=== MENU ===\n";
-        cout << "1. Registrar un bot\n";
-        cout << "2. Info de un bot\n";
-        cout << "3. Salir\n";
-        cout << "Elige opcion: ";
-        cin >> option;
-        cin.ignore();
-
-        switch(option) {
-        case 1: {
-            leer_bot(transformers, bot_num);
-            for(int i=0; i < transformers[bot_num].numero_de_relaciones; i++) {
-                int pos = searching_string(
-                    transformers,
-                    transformers[bot_num].relaciones[i].designacion_1,
-                    bot_num+1
-                );
-
-            }
-                bot_num++;
-            break;
-        }
-        case 2: { // info
-            ordenar_nombre(transformers, bot_num);
-            string to_find;
-            cout <<"Designacion del bot: ";
-            getline(cin, to_find);
-
-            int pos = searching_string(transformers, to_find, bot_num);
-            cout << "Ingresaste: " << to_find
-                 << " whose position is: " << pos << endl;
-
-            if (pos > -1) {
-                mostrar_transformer(transformers[pos]);
-            } else {
-                cout << "No existe" << endl;
-            }
-            break;
-        }
-        case 3:
-            cout << "Saliendo del menu...\n";
-            break;
-        default:
-            cout << "Opcion invalida, intenta otra vez. :( \n";
-        }
-    } while(option != 3);
-}
-
 int main()
 {
     Transformers transformers[m];
