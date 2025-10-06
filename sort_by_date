@@ -1,0 +1,31 @@
+void ordenar_fecha(Transformers bot[], int n){
+    for (int i = 1; i < n; ++i) {
+         Transformers key = bot[i];
+         int j = i - 1;
+         while (j >= 0 && bot[j].creacion.day > key.creacion.day) {
+              bot[j + 1] = bot[j];
+              j= j - 1;
+         }
+         bot[j + 1] = key;
+    }
+
+    for (int i = 1; i < n; ++i) {
+        Transformers key = bot[i];
+        int j = i - 1;
+        while (j >= 0 && bot[j].creacion.month > key.creacion.month) {
+            bot[j + 1] = bot[j];
+            j = j - 1;
+        }
+        bot[j + 1] = key;
+    }
+
+    for (int i = 1; i < n; ++i) {
+        Transformers key = bot[i];
+        int j = i - 1;
+        while (j >= 0 && bot[j].creacion.year > key.creacion.year) {
+            bot[j + 1] = bot[j];
+            j = j - 1;
+        }
+        bot[j + 1] = key;
+    }
+}
