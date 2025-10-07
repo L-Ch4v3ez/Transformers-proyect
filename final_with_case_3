@@ -1,0 +1,253 @@
+#ifndef USEFUL_FUNCTION_CHEST_H_INCLUDED
+#define USEFUL_FUNCTION_CHEST_H_INCLUDED
+#include <string>
+#include <cstdlib>
+#define m 30
+#include "show_data.h"
+
+using namespace std;
+
+void ordenar_fecha(Transformers bot[], int n){
+    for (int i = 1; i < n; ++i) {
+         Transformers key = bot[i];
+         int j = i - 1;
+         while (j >= 0 && bot[j].creacion.day > key.creacion.day) {
+              bot[j + 1] = bot[j];
+              j= j - 1;
+         }
+         bot[j + 1] = key;
+    }
+
+    for (int i = 1; i < n; ++i) {
+        Transformers key = bot[i];
+        int j = i - 1;
+        while (j >= 0 && bot[j].creacion.month > key.creacion.month) {
+            bot[j + 1] = bot[j];
+            j = j - 1;
+        }
+        bot[j + 1] = key;
+    }
+
+    for (int i = 1; i < n; ++i) {
+        Transformers key = bot[i];
+        int j = i - 1;
+        while (j >= 0 && bot[j].creacion.year > key.creacion.year) {
+            bot[j + 1] = bot[j];
+            j = j - 1;
+        }
+        bot[j + 1] = key;
+    }
+}
+
+void ordenar_nombre(Transformers bot[], int n){
+   bool swapped;
+    for (int i = 0; i < n - 1; i++) {
+        swapped = false;
+        for (int j = 0; j < n - i - 1; j++) {
+            if (bot[j].designacion > bot[j + 1].designacion) {
+                swap(bot[j], bot[j + 1]);
+                swapped = true;
+            }
+        }
+
+        if (!swapped)
+            break;
+    }
+}
+
+int searching_string(Transformers bot[], string search_for, int n){
+    cout << "searching"<<endl;
+    int low = 0;
+    int high = n - 1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if(bot[mid].designacion == search_for){
+            cout << "found!"<<endl;
+            return mid;
+        }
+        else if(bot[mid].designacion < search_for){
+            low = mid + 1;
+        }
+        else{
+            high = mid - 1;
+        }
+    }
+    return -1;
+}
+
+void update_relations(Transformers bots[], string existing_bot, string name_to_add, string relation_to_add, int bot_num){
+     int position = searching_string(bots,existing_bot,bot_num);
+     int num_relations = bots[position].numero_de_relaciones;
+     bots[position].relaciones[num_relations].designacion_1 = name_to_add;
+     bots[position].relaciones[num_relations].amistad = relation_to_add;
+     cout << "a "<< existing_bot <<" se le agrega la relacion de "<< bots[position].relaciones[num_relations].amistad << " de parte de " << bots[position].relaciones[num_relations].designacion_1<<endl;
+}
+
+void leer_relaciones(Relacion relacion[], int n, Transformers bots[], int bot_num){ // relacion [] del bot siendo registrado, n num de rel
+    cout << "Con quienes tiene relacion?: " << endl;
+    for (int i=0; i<n; i++){
+        cin.ignore();
+        getline (cin, relacion[i].designacion_1);
+        cout << "   Estado('amistad', 'neutral', 'enemistad'): ";
+        getline (cin, relacion[i].amistad);
+        cout << "Updating relations . . . ."<<endl;
+    }
+    cout << endl;
+}
+
+void leer_fecha(Fecha &date){
+     cout<<"Fecha de creacion: (DD/MM/YYYY)"<<endl;
+     cin>> date.day >> date.month >> date.year;
+}
+
+void get_stats (TechSpech &stats){
+     cout << "Strenght: "<<endl; cin >> stats.strenght;
+     cout << "Intelligence: "<<endl; cin >> stats.intelligence;
+     cout << "Speed: "<<endl; cin >> stats.speed;
+     cout << "Endurance: "<<endl; cin >> stats.endurance;
+     cout << "Firepower: "<<endl; cin >> stats.firepower;
+}
+
+void leer_bot (Transformers bot[], int i, int bot_num){
+    cout << "Designacion: ";
+    getline (cin, bot[i].designacion);
+    cout << "Tipo: ";
+    getline (cin, bot[i].tipo);
+    cout << "Numero de relaciones: " ;
+    cin >> bot[i].numero_de_relaciones ;
+    leer_relaciones (bot[i].relaciones,bot[i].numero_de_relaciones,bot,bot_num);
+    get_stats (bot[i].stats);
+    leer_fecha(bot[i].creacion);
+}
+
+void fight(Transformers bots[], Transformers bot_1, Transformers bot_2){
+     int prob_bot1=(bot_1.stats.strenght +bot_1.stats.speed +bot_1.stats.intelligence +bot_1.stats.firepower) * bot_1.stats.endurance;
+     int prob_bot2=(bot_2.stats.strenght +bot_2.stats.speed +bot_2.stats.intelligence +bot_2.stats.firepower) * bot_2.stats.endurance;
+     int total = prob_bot1+prob_bot2;
+     int r = rand() % total+1;
+     cout << r<<endl;
+     this_thread::sleep_for(std::chrono::milliseconds(300));
+     if(r <= prob_bot1){
+        cout <<"Ganador: "<< bot_1.designacion<<endl;
+     } else {
+        cout <<"Ganador: "<< bot_2.designacion<<endl;
+     }
+}
+
+void modificar_bot(Transformers &bot, int bot_num, Transformers bots[]) {
+    int opcion;
+    do {
+        cout << "\n=== MODIFICAR BOT: " << bot.designacion << " ===\n";
+        cout << "1. Cambiar designacion\n";
+        cout << "2. Cambiar tipo\n";
+        cout << "3. Modificar relaciones\n";
+        cout << "4. Modificar stats\n";
+        cout << "5. Modificar fecha de creacion\n";
+        cout << "6. Salir\n";
+        cout << "Elige opcion: ";
+        cin >> opcion;
+        cin.ignore();
+
+        switch(opcion) {
+        case 1:
+            cout << "Nueva designacion: ";
+            getline(cin, bot.designacion);
+            break;
+        case 2:
+            cout << "Nuevo tipo: ";
+            getline(cin, bot.tipo);
+            break;
+        case 3:
+            cout << "Numero de relaciones: ";
+            cin >> bot.numero_de_relaciones;
+            cin.ignore();
+            leer_relaciones(bot.relaciones, bot.numero_de_relaciones,bots, bot_num);
+            break;
+        case 4:
+            get_stats(bot.stats);
+            break;
+        case 5:
+            leer_fecha(bot.creacion);
+            break;
+        case 6:
+            cout << "Saliendo de modificacion...\n";
+            break;
+        default:
+            cout << "Opcion invalida.\n";
+        }
+    } while(opcion != 6);
+}
+
+void menu(Transformers transformers[], int &bot_num) {
+    int option = 0;
+    do {
+        cout << "\n=== MENU ===\n";
+        cout << "1. Registrar un bot\n";
+        cout << "2. Info de un bot\n";
+        cout << "3. FIGHT\n";
+        cout << "4. Modificar bot \n";
+        cout << "5. Power Down (Exit) \n";
+        cout << "Elige opcion: ";
+        cin >> option;
+        cin.ignore();
+
+        switch(option) {
+        case 1: {
+            leer_bot(transformers, bot_num, bot_num);
+                bot_num++;
+            break;
+        }
+        case 2: { // info
+            ordenar_nombre(transformers, bot_num);
+            string to_find;
+            cout <<"Designacion del bot: ";
+            getline(cin, to_find);
+
+            int pos = searching_string(transformers, to_find, bot_num);
+            cout << "Ingresaste: " << to_find
+                 << " whose position is: " << pos << endl;
+
+            if (pos > -1) {
+                mostrar_transformer(transformers[pos]);
+            } else {
+                cout << "No existe" << endl;
+            }
+            break;
+        }
+        case 3:{
+            Transformers bot_1, bot_2;
+            cout << "Choose Fighter 1:"<<endl;
+            getline(cin,bot_1.designacion);
+            int pos_bot_1=searching_string(transformers, bot_1.designacion,bot_num);
+            cout << "Choose Fighter 2:"<<endl;
+            getline(cin,bot_2.designacion);
+            int pos_bot_2=searching_string(transformers, bot_2.designacion,bot_num);
+            cout << bot_1.designacion << " vs " <<bot_2.designacion<<endl;
+            fight(transformers,transformers[pos_bot_1],transformers[pos_bot_2]);
+            break;
+            }
+
+        case 4: {
+            ordenar_nombre(transformers, bot_num);
+            string to_find;
+            cout << "Designacion del bot a modificar: ";
+            getline(cin, to_find);
+
+            int pos = searching_string(transformers, to_find, bot_num);
+            if (pos > -1) {
+            modificar_bot(transformers[pos],bot_num, transformers);
+    } else {
+        cout << "No existe ese bot.\n";
+    }
+    break;
+}
+        case 5:
+            cout << "Saliendo del menu...\n";
+            break;
+        default:
+            cout << "Opcion invalida, intenta otra vez. :( \n";
+        }
+    } while(option != 5);
+}
+
+#endif // USEFUL_FUNCTION_CHEST_H_INCLUDED
